@@ -4,9 +4,9 @@ USE shop_db;
 
 DROP TABLE IF EXISTS orders;
 DROP TABLE IF EXISTS product;
-DROP TABLE IF EXISTS user;
+DROP TABLE IF EXISTS `user`;
 
-CREATE TABLE user (
+CREATE TABLE `user` (
     id INT PRIMARY KEY AUTO_INCREMENT,
     username VARCHAR(50) NOT NULL,
     phone VARCHAR(20)
@@ -27,14 +27,14 @@ CREATE TABLE orders (
     total_price DECIMAL(10,2) NOT NULL,
     status INT NOT NULL DEFAULT 0 COMMENT '0-待支付 1-已支付 2-已取消 3-已完成',
     order_time DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES user(id),
+    FOREIGN KEY (user_id) REFERENCES `user`(id),
     FOREIGN KEY (product_id) REFERENCES product(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-INSERT INTO user (username, phone) VALUES ('张三', '13800138001');
-INSERT INTO user (username, phone) VALUES ('李四', '13800138002');
-INSERT INTO user (username, phone) VALUES ('王五', '13800138003');
-INSERT INTO user (username, phone) VALUES ('赵六', '13800138004');
+INSERT INTO `user` (username, phone) VALUES ('张三', '13800138001');
+INSERT INTO `user` (username, phone) VALUES ('李四', '13800138002');
+INSERT INTO `user` (username, phone) VALUES ('王五', '13800138003');
+INSERT INTO `user` (username, phone) VALUES ('赵六', '13800138004');
 
 INSERT INTO product (product_name, price, stock) VALUES ('iPhone 15', 5999.00, 100);
 INSERT INTO product (product_name, price, stock) VALUES ('MacBook Pro', 12999.00, 50);
