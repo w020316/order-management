@@ -27,8 +27,8 @@ CREATE TABLE orders (
     total_price DECIMAL(10,2) NOT NULL,
     status INT NOT NULL DEFAULT 0 COMMENT '0-待支付 1-已支付 2-已取消 3-已完成',
     order_time DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES `user`(id),
-    FOREIGN KEY (product_id) REFERENCES product(id)
+    FOREIGN KEY (user_id) REFERENCES `user`(id) ON DELETE RESTRICT ON UPDATE CASCADE,
+    FOREIGN KEY (product_id) REFERENCES product(id) ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 INSERT INTO `user` (username, phone) VALUES ('张三', '13800138001');
