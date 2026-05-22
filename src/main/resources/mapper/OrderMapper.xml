@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.order.mapper.OrderMapper">
+
+    <resultMap id="BaseResultMap" type="com.example.order.entity.Orders">
+        <id column="id" property="id"/>
+        <result column="user_id" property="userId"/>
+        <result column="product_id" property="productId"/>
+        <result column="quantity" property="quantity"/>
+        <result column="total_price" property="totalPrice"/>
+        <result column="order_time" property="orderTime"/>
+    </resultMap>
+
+    <resultMap id="OrderDetailResultMap" type="com.example.order.entity.OrderDetail">
+        <id column="id" property="id"/>
+        <result column="user_id" property="userId"/>
+        <result column="user_name" property="userName"/>
+        <result column="product_id" property="productId"/>
+        <result column="product_name" property="productName"/>
+        <result column="quantity" property="quantity"/>
+        <result column="total_price" property="totalPrice"/>
+        <result column="order_time" property="orderTime"/>
+    </resultMap>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO orders (user_id, product_id, quantity, total_price, order_time)
+        VALUES (#{userId}, #{productId}, #{quantity}, #{totalPrice}, NOW())
+    </insert>
+
+    <select id="selectOrderDetailById" resultMap="OrderDetailResultMap">
+        SELECT
+            o.id,
+            o.user_id,
+            u.username AS user_name,
+            o.product_id,
+            p.product_name AS product_name,
+            o.quantity,
+            o.total_price,
+            o.order_time
+        FROM orders o
+        LEFT JOIN user u ON o.user_id = u.id
+        LEFT JOIN product p ON o.product_id = p.id
+        WHERE o.id = #{id}
+    </select>
+
+    <select id="selectOrderDetailsByUserId" resultMap="OrderDetailResultMap">
+        SELECT
+            o.id,
+            o.user_id,
+            u.username AS user_name,
+            o.product_id,
+            p.product_name AS product_name,
+            o.quantity,
+            o.total_price,
+            o.order_time
+        FROM orders o
+        LEFT JOIN user u ON o.user_id = u.id
+        LEFT JOIN product p ON o.product_id = p.id
+        WHERE o.user_id = #{userId}
+        ORDER BY o.order_time DESC
+    </select>
+
+</mapper>
