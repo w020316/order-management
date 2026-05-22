@@ -12,5 +12,6 @@ public class Orders {
     private Integer productId;
     private Integer quantity;
     private BigDecimal totalPrice;
+    private Integer status;
     private LocalDateTime orderTime;
 }

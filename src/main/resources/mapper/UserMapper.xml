@@ -17,4 +17,21 @@
         SELECT id, username, phone FROM user
     </select>
 
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO user (username, phone) VALUES (#{username}, #{phone})
+    </insert>
+
+    <update id="updateById">
+        UPDATE user
+        <set>
+            <if test="username != null">username = #{username},</if>
+            <if test="phone != null">phone = #{phone},</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM user WHERE id = #{id}
+    </delete>
+
 </mapper>

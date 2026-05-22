@@ -17,5 +17,9 @@ public class OrderDetailVO {
 
     private BigDecimal totalPrice;
 
+    private Integer status;
+
+    private String statusDesc;
+
     private String orderTime;
 }

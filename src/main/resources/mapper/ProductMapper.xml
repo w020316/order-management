@@ -18,8 +18,38 @@
         UPDATE product SET stock = stock - #{quantity} WHERE id = #{id} AND stock >= #{quantity}
     </update>
 
+    <update id="increaseStock">
+        UPDATE product SET stock = stock + #{quantity} WHERE id = #{id}
+    </update>
+
     <select id="selectAll" resultMap="BaseResultMap">
         SELECT id, product_name, price, stock FROM product
     </select>
+
+    <select id="selectByPage" resultMap="BaseResultMap">
+        SELECT id, product_name, price, stock FROM product ORDER BY id LIMIT #{offset}, #{pageSize}
+    </select>
+
+    <select id="selectCount" resultType="java.lang.Long">
+        SELECT COUNT(*) FROM product
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO product (product_name, price, stock) VALUES (#{productName}, #{price}, #{stock})
+    </insert>
+
+    <update id="updateById">
+        UPDATE product
+        <set>
+            <if test="productName != null">product_name = #{productName},</if>
+            <if test="price != null">price = #{price},</if>
+            <if test="stock != null">stock = #{stock},</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM product WHERE id = #{id}
+    </delete>
 
 </mapper>

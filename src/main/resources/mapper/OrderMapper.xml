@@ -9,6 +9,7 @@
         <result column="product_id" property="productId"/>
         <result column="quantity" property="quantity"/>
         <result column="total_price" property="totalPrice"/>
+        <result column="status" property="status"/>
         <result column="order_time" property="orderTime"/>
     </resultMap>
 
@@ -20,12 +21,13 @@
         <result column="product_name" property="productName"/>
         <result column="quantity" property="quantity"/>
         <result column="total_price" property="totalPrice"/>
+        <result column="status" property="status"/>
         <result column="order_time" property="orderTime"/>
     </resultMap>
 
     <insert id="insert" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO orders (user_id, product_id, quantity, total_price, order_time)
-        VALUES (#{userId}, #{productId}, #{quantity}, #{totalPrice}, NOW())
+        INSERT INTO orders (user_id, product_id, quantity, total_price, status, order_time)
+        VALUES (#{userId}, #{productId}, #{quantity}, #{totalPrice}, #{status}, NOW())
     </insert>
 
     <select id="selectOrderDetailById" resultMap="OrderDetailResultMap">
@@ -37,6 +39,7 @@
             p.product_name AS product_name,
             o.quantity,
             o.total_price,
+            o.status,
             o.order_time
         FROM orders o
         LEFT JOIN user u ON o.user_id = u.id
@@ -53,12 +56,27 @@
             p.product_name AS product_name,
             o.quantity,
             o.total_price,
+            o.status,
             o.order_time
         FROM orders o
         LEFT JOIN user u ON o.user_id = u.id
         LEFT JOIN product p ON o.product_id = p.id
         WHERE o.user_id = #{userId}
         ORDER BY o.order_time DESC
+        LIMIT #{offset}, #{pageSize}
     </select>
+
+    <select id="selectCountByUserId" resultType="java.lang.Long">
+        SELECT COUNT(*) FROM orders WHERE user_id = #{userId}
+    </select>
+
+    <select id="selectById" resultMap="BaseResultMap">
+        SELECT id, user_id, product_id, quantity, total_price, status, order_time
+        FROM orders WHERE id = #{id}
+    </select>
+
+    <update id="updateStatus">
+        UPDATE orders SET status = #{status} WHERE id = #{id}
+    </update>
 
 </mapper>

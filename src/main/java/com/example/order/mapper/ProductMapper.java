@@ -12,5 +12,17 @@ public interface ProductMapper {
 
     int decreaseStock(@Param("id") Integer id, @Param("quantity") Integer quantity);
 
+    int increaseStock(@Param("id") Integer id, @Param("quantity") Integer quantity);
+
     List<Product> selectAll();
+
+    List<Product> selectByPage(@Param("offset") Integer offset, @Param("pageSize") Integer pageSize);
+
+    Long selectCount();
+
+    int insert(Product product);
+
+    int updateById(Product product);
+
+    int deleteById(Integer id);
 }

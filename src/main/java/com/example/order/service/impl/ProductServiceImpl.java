@@ -1,8 +1,13 @@
 package com.example.order.service.impl;
 
+import com.example.order.dto.CreateProductRequest;
+import com.example.order.dto.PageRequest;
+import com.example.order.dto.UpdateProductRequest;
 import com.example.order.entity.Product;
+import com.example.order.exception.BusinessException;
 import com.example.order.mapper.ProductMapper;
 import com.example.order.service.ProductService;
+import com.example.order.vo.PageResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,11 +21,55 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product getProductById(Integer id) {
+        Product product = productMapper.selectById(id);
+        if (product == null) {
+            throw new BusinessException("商品不存在");
+        }
+        return product;
+    }
+
+    @Override
+    public PageResult<Product> getAllProducts(PageRequest pageRequest) {
+        Long total = productMapper.selectCount();
+        List<Product> list = productMapper.selectByPage(pageRequest.getOffset(), pageRequest.getPageSize());
+        return PageResult.of(list, total, pageRequest.getPageNum(), pageRequest.getPageSize());
+    }
+
+    @Override
+    public Product createProduct(CreateProductRequest request) {
+        Product product = new Product();
+        product.setProductName(request.getProductName());
+        product.setPrice(request.getPrice());
+        product.setStock(request.getStock());
+        productMapper.insert(product);
+        return product;
+    }
+
+    @Override
+    public Product updateProduct(Integer id, UpdateProductRequest request) {
+        Product product = productMapper.selectById(id);
+        if (product == null) {
+            throw new BusinessException("商品不存在");
+        }
+        if (request.getProductName() != null) {
+            product.setProductName(request.getProductName());
+        }
+        if (request.getPrice() != null) {
+            product.setPrice(request.getPrice());
+        }
+        if (request.getStock() != null) {
+            product.setStock(request.getStock());
+        }
+        productMapper.updateById(product);
         return productMapper.selectById(id);
     }
 
     @Override
-    public List<Product> getAllProducts() {
-        return productMapper.selectAll();
+    public void deleteProduct(Integer id) {
+        Product product = productMapper.selectById(id);
+        if (product == null) {
+            throw new BusinessException("商品不存在");
+        }
+        productMapper.deleteById(id);
     }
 }
