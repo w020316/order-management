@@ -3,13 +3,13 @@ package com.example.order.exception;
 import com.example.order.common.Result;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataAccessException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.servlet.NoHandlerFoundException;
 
 import java.util.stream.Collectors;
 
@@ -48,9 +48,10 @@ public class GlobalExceptionHandler {
         return Result.error(400, "缺少请求参数: " + e.getParameterName());
     }
 
-    @ExceptionHandler(NoHandlerFoundException.class)
-    public Result<?> handleNotFoundException(NoHandlerFoundException e) {
-        return Result.error(404, "请求的资源不存在");
+    @ExceptionHandler(DataAccessException.class)
+    public Result<?> handleDataAccessException(DataAccessException e) {
+        logger.error("数据库异常", e);
+        return Result.error("数据操作失败，请检查数据是否合规");
     }
 
     @ExceptionHandler(Exception.class)

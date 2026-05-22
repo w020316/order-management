@@ -17,4 +17,6 @@ public interface OrderMapper {
     Long selectCountByUserId(Integer userId);
     Orders selectById(Integer id);
     int updateStatus(@Param("id") Integer id, @Param("status") Integer status);
+    Long selectCountByProductId(Integer productId);
+    Long selectCountByUserIdForCheck(Integer userId);
 }

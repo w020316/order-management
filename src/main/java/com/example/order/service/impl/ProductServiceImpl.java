@@ -5,6 +5,7 @@ import com.example.order.dto.PageRequest;
 import com.example.order.dto.UpdateProductRequest;
 import com.example.order.entity.Product;
 import com.example.order.exception.BusinessException;
+import com.example.order.mapper.OrderMapper;
 import com.example.order.mapper.ProductMapper;
 import com.example.order.service.ProductService;
 import com.example.order.vo.PageResult;
@@ -18,6 +19,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Autowired
     private ProductMapper productMapper;
+
+    @Autowired
+    private OrderMapper orderMapper;
 
     @Override
     public Product getProductById(Integer id) {
@@ -69,6 +73,10 @@ public class ProductServiceImpl implements ProductService {
         Product product = productMapper.selectById(id);
         if (product == null) {
             throw new BusinessException("商品不存在");
+        }
+        Long orderCount = orderMapper.selectCountByProductId(id);
+        if (orderCount > 0) {
+            throw new BusinessException("该商品存在关联订单，无法删除");
         }
         productMapper.deleteById(id);
     }

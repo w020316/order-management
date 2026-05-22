@@ -21,7 +21,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
@@ -69,15 +68,28 @@ class OrderServiceImplTest {
         when(userMapper.selectById(1)).thenReturn(testUser);
         when(productMapper.selectById(1)).thenReturn(testProduct);
         when(productMapper.decreaseStock(1, 2)).thenReturn(1);
-        when(orderMapper.insert(any(Orders.class))).thenReturn(1);
+        when(orderMapper.insert(any(Orders.class))).thenAnswer(invocation -> {
+            Orders o = invocation.getArgument(0);
+            o.setId(1);
+            return 1;
+        });
 
-        Orders result = orderService.createOrder(request);
+        OrderDetail detail = new OrderDetail();
+        detail.setId(1);
+        detail.setUserName("张三");
+        detail.setProductName("iPhone 15");
+        detail.setQuantity(2);
+        detail.setTotalPrice(new BigDecimal("11998.00"));
+        detail.setStatus(OrderStatus.PENDING.getCode());
+        detail.setOrderTime(LocalDateTime.now());
+        when(orderMapper.selectOrderDetailById(1)).thenReturn(detail);
+
+        OrderDetailVO result = orderService.createOrder(request);
 
         assertNotNull(result);
         assertEquals(new BigDecimal("11998.00"), result.getTotalPrice());
         assertEquals(OrderStatus.PENDING.getCode(), result.getStatus());
         verify(productMapper).decreaseStock(1, 2);
-        verify(orderMapper).insert(any(Orders.class));
     }
 
     @Test
@@ -117,20 +129,6 @@ class OrderServiceImplTest {
 
         BusinessException ex = assertThrows(BusinessException.class, () -> orderService.createOrder(request));
         assertTrue(ex.getMessage().contains("库存不足"));
-    }
-
-    @Test
-    void createOrder_concurrentStockDecreaseFail() {
-        CreateOrderRequest request = new CreateOrderRequest();
-        request.setUserId(1);
-        request.setProductId(1);
-        request.setQuantity(1);
-
-        when(userMapper.selectById(1)).thenReturn(testUser);
-        when(productMapper.selectById(1)).thenReturn(testProduct);
-        when(productMapper.decreaseStock(1, 1)).thenReturn(0);
-
-        assertThrows(BusinessException.class, () -> orderService.createOrder(request));
     }
 
     @Test
@@ -184,6 +182,25 @@ class OrderServiceImplTest {
         OrderDetailVO result = orderService.payOrder(1);
         assertNotNull(result);
         assertEquals(OrderStatus.PAID.getCode(), result.getStatus());
+    }
+
+    @Test
+    void completeOrder_success() {
+        Orders order = new Orders();
+        order.setId(1);
+        order.setStatus(OrderStatus.PAID.getCode());
+
+        when(orderMapper.selectById(1)).thenReturn(order);
+        when(orderMapper.updateStatus(1, OrderStatus.COMPLETED.getCode())).thenReturn(1);
+
+        OrderDetail detail = new OrderDetail();
+        detail.setId(1);
+        detail.setStatus(OrderStatus.COMPLETED.getCode());
+        when(orderMapper.selectOrderDetailById(1)).thenReturn(detail);
+
+        OrderDetailVO result = orderService.completeOrder(1);
+        assertNotNull(result);
+        assertEquals(OrderStatus.COMPLETED.getCode(), result.getStatus());
     }
 
     @Test

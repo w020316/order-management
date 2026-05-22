@@ -7,9 +7,10 @@ import com.example.order.vo.OrderDetailVO;
 import com.example.order.vo.PageResult;
 
 public interface OrderService {
-    Orders createOrder(CreateOrderRequest request);
+    OrderDetailVO createOrder(CreateOrderRequest request);
     OrderDetailVO getOrderDetail(Integer orderId);
     PageResult<OrderDetailVO> getOrdersByUserId(Integer userId, PageRequest pageRequest);
     OrderDetailVO cancelOrder(Integer orderId);
     OrderDetailVO payOrder(Integer orderId);
+    OrderDetailVO completeOrder(Integer orderId);
 }

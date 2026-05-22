@@ -39,7 +39,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Orders createOrder(CreateOrderRequest request) {
+    public OrderDetailVO createOrder(CreateOrderRequest request) {
         User user = userMapper.selectById(request.getUserId());
         if (user == null) {
             throw new BusinessException("用户不存在");
@@ -68,7 +68,7 @@ public class OrderServiceImpl implements OrderService {
         orders.setStatus(OrderStatus.PENDING.getCode());
         orderMapper.insert(orders);
 
-        return orders;
+        return getOrderDetail(orders.getId());
     }
 
     @Override
@@ -124,6 +124,22 @@ public class OrderServiceImpl implements OrderService {
         }
 
         orderMapper.updateStatus(orderId, OrderStatus.PAID.getCode());
+
+        return getOrderDetail(orderId);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public OrderDetailVO completeOrder(Integer orderId) {
+        Orders order = orderMapper.selectById(orderId);
+        if (order == null) {
+            throw new BusinessException("订单不存在");
+        }
+        if (order.getStatus() != OrderStatus.PAID.getCode()) {
+            throw new BusinessException("只能完成已支付的订单");
+        }
+
+        orderMapper.updateStatus(orderId, OrderStatus.COMPLETED.getCode());
 
         return getOrderDetail(orderId);
     }

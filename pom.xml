@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.7.18</version>
+        <version>3.2.5</version>
         <relativePath/>
     </parent>
 
@@ -14,11 +14,11 @@
     <artifactId>order-management</artifactId>
     <version>1.0.0</version>
     <name>order-management</name>
-    <description>电商订单查询系统</description>
+    <description>电商订单管理系统</description>
 
     <properties>
         <java.version>21</java.version>
-        <mybatis.version>2.3.2</mybatis.version>
+        <mybatis.version>3.0.3</mybatis.version>
     </properties>
 
     <dependencies>
@@ -34,9 +34,8 @@
         </dependency>
 
         <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <version>8.0.33</version>
+            <groupId>com.mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
             <scope>runtime</scope>
         </dependency>
 
@@ -52,9 +51,9 @@
         </dependency>
 
         <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-boot-starter</artifactId>
-            <version>3.0.0</version>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+            <version>2.3.0</version>
         </dependency>
 
         <dependency>

@@ -15,12 +15,15 @@ public class PageResult<T> {
 
     private Integer pageSize;
 
+    private Integer totalPages;
+
     public static <T> PageResult<T> of(List<T> list, Long total, Integer pageNum, Integer pageSize) {
         PageResult<T> result = new PageResult<>();
         result.setList(list);
         result.setTotal(total);
         result.setPageNum(pageNum);
         result.setPageSize(pageSize);
+        result.setTotalPages(pageSize > 0 ? (int) Math.ceil((double) total / pageSize) : 0);
         return result;
     }
 }

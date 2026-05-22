@@ -4,6 +4,7 @@ import com.example.order.dto.CreateUserRequest;
 import com.example.order.dto.UpdateUserRequest;
 import com.example.order.entity.User;
 import com.example.order.exception.BusinessException;
+import com.example.order.mapper.OrderMapper;
 import com.example.order.mapper.UserMapper;
 import com.example.order.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private OrderMapper orderMapper;
 
     @Override
     public User getUserById(Integer id) {
@@ -61,6 +65,10 @@ public class UserServiceImpl implements UserService {
         User user = userMapper.selectById(id);
         if (user == null) {
             throw new BusinessException("用户不存在");
+        }
+        Long orderCount = orderMapper.selectCountByUserIdForCheck(id);
+        if (orderCount > 0) {
+            throw new BusinessException("该用户存在关联订单，无法删除");
         }
         userMapper.deleteById(id);
     }

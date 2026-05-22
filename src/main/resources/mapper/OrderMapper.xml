@@ -79,4 +79,12 @@
         UPDATE orders SET status = #{status} WHERE id = #{id}
     </update>
 
+    <select id="selectCountByProductId" resultType="java.lang.Long">
+        SELECT COUNT(*) FROM orders WHERE product_id = #{productId}
+    </select>
+
+    <select id="selectCountByUserIdForCheck" resultType="java.lang.Long">
+        SELECT COUNT(*) FROM orders WHERE user_id = #{userId}
+    </select>
+
 </mapper>

@@ -7,10 +7,6 @@ spring:
     username: root
     password: ${MYSQL_PASSWORD:root}
     driver-class-name: com.mysql.cj.jdbc.Driver
-  mvc:
-    pathmatch:
-      matching-strategy: ant_path_matcher
-
 mybatis:
   mapper-locations: classpath:mapper/*.xml
   type-aliases-package: com.example.order.entity

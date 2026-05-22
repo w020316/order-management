@@ -3,7 +3,6 @@ package com.example.order.controller;
 import com.example.order.common.Result;
 import com.example.order.dto.CreateOrderRequest;
 import com.example.order.dto.PageRequest;
-import com.example.order.entity.Orders;
 import com.example.order.service.OrderService;
 import com.example.order.vo.OrderDetailVO;
 import com.example.order.vo.PageResult;
@@ -19,33 +18,33 @@ public class OrderController {
     private OrderService orderService;
 
     @PostMapping
-    public Result<Orders> createOrder(@Validated @RequestBody CreateOrderRequest request) {
-        Orders orders = orderService.createOrder(request);
-        return Result.success(orders);
+    public Result<OrderDetailVO> createOrder(@Validated @RequestBody CreateOrderRequest request) {
+        return Result.success(orderService.createOrder(request));
     }
 
     @GetMapping("/{id}")
     public Result<OrderDetailVO> getOrderDetail(@PathVariable Integer id) {
-        OrderDetailVO detail = orderService.getOrderDetail(id);
-        return Result.success(detail);
+        return Result.success(orderService.getOrderDetail(id));
     }
 
     @GetMapping("/user/{userId}")
     public Result<PageResult<OrderDetailVO>> getOrdersByUserId(
             @PathVariable Integer userId, PageRequest pageRequest) {
-        PageResult<OrderDetailVO> result = orderService.getOrdersByUserId(userId, pageRequest);
-        return Result.success(result);
+        return Result.success(orderService.getOrdersByUserId(userId, pageRequest));
     }
 
     @PutMapping("/{id}/cancel")
     public Result<OrderDetailVO> cancelOrder(@PathVariable Integer id) {
-        OrderDetailVO detail = orderService.cancelOrder(id);
-        return Result.success(detail);
+        return Result.success(orderService.cancelOrder(id));
     }
 
     @PutMapping("/{id}/pay")
     public Result<OrderDetailVO> payOrder(@PathVariable Integer id) {
-        OrderDetailVO detail = orderService.payOrder(id);
-        return Result.success(detail);
+        return Result.success(orderService.payOrder(id));
+    }
+
+    @PutMapping("/{id}/complete")
+    public Result<OrderDetailVO> completeOrder(@PathVariable Integer id) {
+        return Result.success(orderService.completeOrder(id));
     }
 }

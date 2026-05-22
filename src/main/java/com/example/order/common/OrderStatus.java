@@ -1,5 +1,7 @@
 package com.example.order.common;
 
+import com.example.order.exception.BusinessException;
+
 public enum OrderStatus {
 
     PENDING(0, "待支付"),
@@ -29,6 +31,6 @@ public enum OrderStatus {
                 return status;
             }
         }
-        throw new IllegalArgumentException("无效的订单状态码: " + code);
+        throw new BusinessException("无效的订单状态码: " + code);
     }
 }
