@@ -1417,10 +1417,7 @@
             dot.className = 'connection-dot checking';
             text.textContent = '检测中...';
             try {
-                const res = await fetch(API.products + '?pageNum=1&pageSize=1', {
-                    method: 'HEAD',
-                    headers: { 'Content-Type': 'application/json' }
-                });
+                const res = await fetch(API.products + '?pageNum=1&pageSize=1');
                 dot.className = 'connection-dot online';
                 text.textContent = 'API 已连接';
                 banner.style.display = 'none';
